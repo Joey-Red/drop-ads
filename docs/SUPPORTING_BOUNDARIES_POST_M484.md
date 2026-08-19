@@ -1,0 +1,11 @@
+# Supporting boundary hardening after canonical M484
+
+Canonical ROADMAP numbering currently ends at M484. The supporting changes below landed while concurrent repository writers were active and intentionally do **not** redefine later milestone numbers.
+
+- **Cosmetic warning failure isolation:** optional cosmetic runtime warnings are best effort, so a throwing supplied warning callback cannot replace tab-enumeration fallback results or escape storage-driven refresh containment. Coverage: `tests/cosmetic-runtime-warning-isolation-support.test.js`.
+- **Bounded cosmetic sender URL work:** after descriptor-safe selection of `sender.url` or fallback `sender.tab.url`, sender URL text over the existing **16,384-character** network-value ceiling is rejected before scheme matching or `new URL()` parsing. Coverage: `tests/cosmetic-runtime-sender-url-v485.test.js` (historical supporting suffix).
+- **Safe-integer tab fanout ids:** fanout admits only non-negative safe-integer tab ids before dedupe/send while preserving the intentional no-total-tab-cap policy and **32 concurrent sends** ceiling. Coverage: `tests/tab-fanout-safe-id-v486.test.js` (historical supporting suffix).
+- **Cosmetic API namespace ownership:** first-install cosmetic runtime setup captures runtime/storage/tabs namespaces, relevant events, and receiver-bound `tabs.query` without accessor execution. Coverage: `tests/cosmetic-runtime-api-capture-v469.test.js` (historical supporting suffix).
+- **Cross-module duplicate-install audit:** registration-backed helper fast paths are structurally covered so duplicate installation returns before sensitive collaborator recapture while exact option validation remains first-install authoritative. Coverage: `tests/installer-idempotence-fast-path-audit-v468.test.js` (historical supporting suffix).
+
+Connector-created or connector-edited coverage here is repository evidence only and was not executed locally, packaged, or run in Chromium/Firefox. These changes add no telemetry, analytics, browsing/request history, retained matched content, identifiers, polling, backend, permissions, or retention expansion. PR #7 remains draft and Issue #10 remains the exact-head browser qualification gate.

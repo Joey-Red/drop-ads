@@ -1,0 +1,55 @@
+:root { color-scheme: light dark; font: 17px/1.5 system-ui, sans-serif; }
+body { margin: 0; min-width: 320px; background: Canvas; color: CanvasText; }
+main { padding: 18px; }
+header, .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+header { padding-bottom: 16px; border-bottom: 1px solid color-mix(in srgb, CanvasText 22%, transparent); }
+header h1 { margin: 0; font-size: 20px; line-height: 1.2; }
+.status { font-size: 14px; opacity: .72; }
+.toggle-row { min-height: 44px; margin: 20px 0 12px; font-weight: 650; }
+.control-help { margin: -4px 0 8px; font-size: 14px; }
+.global-status { min-height: 1.4em; margin: 0 0 12px; font-size: 14px; font-weight: 650; opacity: .9; }
+#site-section { margin: 16px 0 18px; padding: 14px; border: 1px solid color-mix(in srgb, CanvasText 20%, transparent); border-radius: 9px; }
+.site-name { margin: 0; overflow-wrap: anywhere; font-size: 18px; line-height: 1.35; font-weight: 650; }
+.site-toggle { margin: 12px 0 8px; }
+p { margin: 0 0 18px; max-width: 40ch; overflow-wrap: anywhere; opacity: .78; }
+.site-actions { display: grid; }
+#pause-site, #pick-element { margin-top: 12px; }
+.session-status { min-height: 1.4em; margin: 8px 0 0; font-size: 14px; font-weight: 650; opacity: .9; }
+#site-help { margin: 7px 0 0; font-size: 14px; }
+.shortcut-help { margin: 0 0 16px; border: 1px solid color-mix(in srgb, CanvasText 22%, transparent); border-radius: 8px; }
+.shortcut-help summary { display: flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 9px 12px; cursor: pointer; font-weight: 650; overflow-wrap: anywhere; }
+.shortcut-help[open] summary { border-bottom: 1px solid color-mix(in srgb, CanvasText 18%, transparent); }
+.shortcut-help summary:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.shortcut-help-note { margin: 0; padding: 8px 12px; max-width: none; font-size: 14px; }
+.shortcut-list { list-style: none; display: grid; gap: 6px; margin: 0; padding: 0 12px 12px; }
+.shortcut-list li { display: grid; grid-template-columns: minmax(32px, auto) minmax(0, 1fr); align-items: center; gap: 10px; min-height: 34px; }
+.shortcut-list li[aria-disabled="true"] { opacity: .55; }
+.shortcut-list span { min-width: 0; overflow-wrap: anywhere; }
+.shortcut-availability { grid-column: 2; font-size: 13px; font-weight: 650; }
+kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; min-height: 28px; flex-shrink: 0; box-sizing: border-box; border: 1px solid currentColor; border-radius: 5px; padding: 2px 7px; background: Canvas; color: CanvasText; font: 650 14px/1 system-ui, sans-serif; }
+button { width: 100%; min-height: 44px; border: 1px solid currentColor; border-radius: 8px; padding: 11px 14px; background: Canvas; color: CanvasText; font: inherit; cursor: pointer; }
+button:hover:not(:disabled) { background: color-mix(in srgb, CanvasText 8%, Canvas); }
+button:disabled { cursor: not-allowed; opacity: .5; }
+button:focus-visible, input:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+input[type="checkbox"] { width: 22px; height: 22px; flex: 0 0 auto; }
+@media (max-width: 360px) {
+  main { padding: 14px; }
+  header, .toggle-row { gap: 10px; }
+  #site-section { padding: 12px; }
+  button { padding-inline: 10px; }
+  .shortcut-help summary, .shortcut-help-note { padding-inline: 10px; }
+  .shortcut-list { padding-inline: 10px; }
+  .shortcut-list li { grid-template-columns: 32px minmax(0, 1fr); gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+@media (prefers-contrast: more) {
+  header, #site-section, button, .shortcut-help, .shortcut-help[open] summary, kbd { border-color: currentColor; }
+  .status, .control-help, .global-status, .session-status, #site-help, .site-unavailable, .shortcut-help-note, .shortcut-list li[aria-disabled="true"], p, button:disabled { opacity: 1; }
+}
+@media (forced-colors: active) {
+  header, #site-section, button, .shortcut-help, .shortcut-help[open] summary, kbd { border-color: CanvasText; }
+  .status, .control-help, .global-status, .session-status, #site-help, .site-unavailable, .shortcut-help-note, .shortcut-list li[aria-disabled="true"], p { opacity: 1; }
+  button:focus-visible, input:focus-visible, .shortcut-help summary:focus-visible { outline-color: Highlight; }
+}

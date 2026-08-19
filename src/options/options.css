@@ -1,0 +1,108 @@
+:root { color-scheme: light dark; font: 18px/1.55 system-ui, sans-serif; }
+body { margin: 0; background: Canvas; color: CanvasText; }
+main { width: min(1000px, calc(100% - 48px)); margin: 52px auto; }
+h1 { margin-bottom: 5px; font-size: 36px; line-height: 1.15; }
+.lede { margin-top: 0; opacity: .74; max-width: 66ch; }
+.settings-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 6px; }
+.settings-nav a { display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; border: 1px solid color-mix(in srgb, CanvasText 28%, transparent); border-radius: 7px; padding: 8px 12px; color: inherit; text-decoration: none; overflow-wrap: anywhere; }
+.settings-nav a:hover { background: color-mix(in srgb, CanvasText 8%, Canvas); }
+.settings-nav a:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+section { margin-top: 34px; padding-top: 26px; border-top: 1px solid color-mix(in srgb, CanvasText 20%, transparent); }
+section[id] { scroll-margin-top: 20px; }
+h2 { margin: 0 0 9px; font-size: 23px; line-height: 1.25; }
+.jump-focus-target:focus { outline: 3px solid currentColor; outline-offset: 4px; }
+label { display: block; font-weight: 600; }
+h1, h2, label, button, .lede, .hint, .rule-note, .check-row span, .subscription-list strong, .subscription-list code { overflow-wrap: anywhere; }
+.check-row { display: flex; align-items: flex-start; gap: 12px; min-height: 44px; max-width: 66ch; font-weight: 400; }
+.check-row input { margin-top: 5px; }
+input[type="checkbox"] { width: 21px; height: 21px; flex: 0 0 auto; }
+input[type="text"], input[type="url"], input[type="search"], input[type="file"], select { min-height: 44px; box-sizing: border-box; border: 1px solid color-mix(in srgb, CanvasText 35%, transparent); border-radius: 7px; padding: 10px 12px; background: Canvas; color: CanvasText; font: inherit; }
+input[type="text"], input[type="url"], input[type="search"] { flex: 1; min-width: 0; }
+select { min-width: 240px; max-width: 100%; }
+.input-row, .subscription-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.cosmetic-input-row { display: grid; grid-template-columns: minmax(180px, .7fr) minmax(260px, 1.5fr) auto; gap: 10px; margin-top: 8px; }
+.cosmetic-exception-form { margin-top: 24px; }
+.backup-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; gap: 10px; margin: 12px 0 10px; }
+.backup-row label { grid-column: 2; grid-row: 1; font-size: 16px; }
+.backup-row #export-settings { grid-column: 1; grid-row: 1 / span 2; align-self: end; }
+.backup-row #import-settings-file { grid-column: 2; grid-row: 2; min-width: 0; }
+.backup-row #import-settings { grid-column: 3; grid-row: 2; }
+.reset-session-note { padding-left: 12px; border-left: 3px solid currentColor; }
+.reset-confirmation { max-width: 760px; box-sizing: border-box; margin: 14px 0 10px; padding: 14px; border: 1px solid color-mix(in srgb, CanvasText 35%, transparent); border-radius: 7px; }
+.reset-confirmation[hidden] { display: none; }
+.reset-confirmation > .hint { margin-top: 0; }
+.reset-confirmation-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+#confirm-reset-settings { font-weight: 700; }
+button { min-height: 44px; border: 1px solid currentColor; border-radius: 7px; padding: 10px 14px; background: Canvas; color: CanvasText; font: inherit; cursor: pointer; }
+button:hover:not(:disabled) { background: color-mix(in srgb, CanvasText 8%, Canvas); }
+button:disabled { cursor: default; opacity: .55; }
+button[aria-busy="true"], input[aria-busy="true"], select[aria-busy="true"], [aria-busy="true"] button { cursor: progress; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.hint { margin: 5px 0 14px; font-size: 16px; opacity: .7; max-width: 74ch; }
+.error { min-height: 1.55em; margin: 6px 0 0; color: #b42318; font-weight: 550; }
+.list-filter { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px 10px; margin: 14px 0 4px; max-width: 760px; }
+.list-filter > label { grid-column: 1 / -1; }
+.list-filter > input[type="search"] { grid-column: 1; width: 100%; }
+.list-filter-clear { grid-column: 2; }
+.list-filter-status { grid-column: 1 / -1; min-height: 1.55em; margin: 0; }
+.list-filter-privacy { grid-column: 1 / -1; margin: -4px 0 0; font-size: 14px; }
+.rule-list { list-style: none; margin: 12px 0 0; padding: 0; border-top: 1px solid color-mix(in srgb, CanvasText 14%, transparent); }
+.rule-list li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid color-mix(in srgb, CanvasText 14%, transparent); }
+.rule-list li > * { min-width: 0; }
+.rule-list code { overflow-wrap: anywhere; font-size: 16px; }
+.rule-list .empty { opacity: .58; }
+.rule-copy { display: grid; gap: 3px; min-width: 0; }
+.rule-note { font-size: 14px; font-weight: 600; opacity: .76; }
+.rule-list li.overridden { padding-left: 10px; border-left: 3px solid currentColor; }
+.rule-list li.overridden code { text-decoration: line-through; text-decoration-thickness: 1px; opacity: .72; }
+.remove, .secondary-action { flex: 0 0 auto; min-height: 44px; padding: 8px 11px; }
+.secondary-action { opacity: .86; }
+.section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 22px; }
+.section-heading > div { min-width: 0; }
+.section-heading .hint { margin-bottom: 0; }
+.subscription-form { margin-top: 20px; }
+.subscription-list .subscription-item > div:first-child { display: grid; gap: 4px; min-width: 0; }
+.subscription-list strong { font-size: 17px; }
+.subscription-list code { font-size: 14px; opacity: .72; }
+.subscription-controls { display: flex; align-items: center; gap: 11px; flex-wrap: wrap; justify-content: flex-end; }
+.inline-check { display: flex; align-items: center; gap: 7px; min-height: 44px; font-weight: 400; }
+@media (max-width: 700px) {
+  :root { font-size: 17px; }
+  main { width: min(100% - 28px, 1000px); margin: 28px auto; }
+  .subscription-row, .section-heading { flex-direction: column; }
+  .cosmetic-input-row { grid-template-columns: 1fr; }
+  .subscription-row select, .subscription-row button, #refresh-lists, .cosmetic-input-row button { width: 100%; }
+  .subscription-item, .rule-list li { align-items: flex-start !important; flex-direction: column; }
+  .subscription-controls { width: 100%; justify-content: flex-start; }
+  .backup-row { grid-template-columns: 1fr; }
+  .backup-row label, .backup-row #export-settings, .backup-row #import-settings-file, .backup-row #import-settings { grid-column: 1; grid-row: auto; width: 100%; box-sizing: border-box; }
+}
+@media (max-width: 520px) {
+  main { width: calc(100% - 20px); margin: 20px auto; }
+  .input-row { flex-direction: column; }
+  .input-row input, .input-row button, select { width: 100%; min-width: 0; }
+  .settings-nav a { flex: 1 1 140px; }
+  .list-filter { grid-template-columns: 1fr; }
+  .list-filter > label, .list-filter > input[type="search"], .list-filter-clear, .list-filter-status, .list-filter-privacy { grid-column: 1; }
+  .list-filter-clear { width: 100%; }
+  .reset-confirmation-actions { flex-direction: column; }
+  .reset-confirmation-actions button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+@media (prefers-contrast: more) {
+  .lede, .hint, .rule-note, .rule-list .empty, .secondary-action, .subscription-list code, .rule-list li.overridden code { opacity: 1; }
+  section, .rule-list, .rule-list li, button, input, select, .settings-nav a, .reset-confirmation, .reset-session-note { border-color: currentColor; }
+  .rule-list li.overridden { border-left-width: 4px; }
+  .reset-session-note { border-left-width: 4px; }
+  .error { font-weight: 700; }
+}
+@media (forced-colors: active) {
+  section, .rule-list, .rule-list li, .rule-list li.overridden, button, input, select, .settings-nav a, .reset-confirmation, .reset-session-note { border-color: CanvasText; }
+  .lede, .hint, .rule-note, .rule-list .empty, .secondary-action, .subscription-list code, .rule-list li.overridden code { opacity: 1; }
+  .error { color: CanvasText; }
+  .rule-list li.overridden { border-left-color: Highlight; }
+  .reset-session-note { border-left-color: Highlight; }
+  button:focus-visible, input:focus-visible, select:focus-visible, .settings-nav a:focus-visible, .jump-focus-target:focus { outline-color: Highlight; }
+}

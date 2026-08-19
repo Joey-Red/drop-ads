@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>drop-ads</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main id="popup-main" aria-labelledby="popup-title" aria-describedby="popup-privacy-note" aria-busy="false">
+    <header>
+      <h1 id="popup-title">drop-ads</h1>
+      <span class="status" id="popup-privacy-note">Local only · no telemetry</span>
+    </header>
+
+    <label class="toggle-row">
+      <span>Blocking</span>
+      <input id="enabled" type="checkbox" aria-label="Global blocking" aria-keyshortcuts="G" aria-describedby="global-status global-help engine-status popup-privacy-note" aria-controls="site-section global-status engine-status" disabled>
+    </label>
+    <p id="global-help" class="control-help">Master switch. Turning blocking off keeps your local rules and exceptions saved.</p>
+    <p id="global-status" class="global-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <p id="engine-status" class="control-help" role="status" aria-live="polite" aria-atomic="true">Checking Drop Ads network engine…</p>
+    <p id="site-unavailable" class="site-unavailable" role="status" aria-live="polite" aria-atomic="true" hidden>Site controls are available on HTTP(S) pages.</p>
+
+    <section id="site-section" aria-labelledby="site-name" aria-describedby="site-help session-status" hidden>
+      <h2 class="site-name" id="site-name"></h2>
+      <label class="toggle-row site-toggle">
+        <span>Protection on this site</span>
+        <input id="site-enabled" type="checkbox" aria-keyshortcuts="S" aria-describedby="session-status site-help" aria-controls="cookie-site-row cookie-banner-site-row pause-site pick-element session-status">
+      </label>
+      <label class="toggle-row site-toggle" id="cookie-site-row" hidden>
+        <span>Cookie protection here</span>
+        <input id="cookie-site-enabled" type="checkbox" aria-keyshortcuts="C" aria-describedby="session-status site-help">
+      </label>
+      <label class="toggle-row site-toggle" id="cookie-banner-site-row" hidden>
+        <span>Reject cookie banners here</span>
+        <input id="cookie-banner-site-enabled" type="checkbox" aria-keyshortcuts="B" aria-describedby="session-status cookie-banner-site-help">
+      </label>
+      <p id="cookie-banner-site-help" class="control-help">Keeps normal blocking on. This site-only preference takes effect on the next page load.</p>
+      <div class="site-actions" role="group" aria-labelledby="site-name" aria-describedby="session-status site-help">
+        <button id="pause-site" type="button" aria-keyshortcuts="P" aria-describedby="session-status site-help" aria-controls="cookie-site-row cookie-site-enabled cookie-banner-site-row cookie-banner-site-enabled pick-element session-status">Pause until browser restart</button>
+        <button id="pick-element" type="button" aria-keyshortcuts="E" aria-describedby="session-status site-help">Pick element to block</button>
+      </div>
+      <p id="session-status" class="session-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p id="site-help">Use the pause for temporary breakage. Turning site protection off creates a persistent local exception. Cookie-banner rejection can be disabled separately without weakening network or cosmetic blocking. Element picker rules are local and site-scoped.</p>
+    </section>
+
+    <p>Right-click an ad, image, media item, frame, or link and choose <strong>Block ad/resource locally</strong> for network blocking. Use <strong>Pick element to block</strong> for an already-rendered page element.</p>
+
+    <details id="shortcut-help" class="shortcut-help" aria-labelledby="shortcut-help-summary">
+      <summary id="shortcut-help-summary" aria-keyshortcuts="?" aria-controls="shortcut-help-list" aria-describedby="shortcut-help-note">Keyboard shortcuts</summary>
+      <p id="shortcut-help-note" class="shortcut-help-note">Unavailable shortcuts are marked below. Site shortcuts require an HTTP(S) page, and busy controls temporarily reject shortcuts.</p>
+      <ul id="shortcut-help-list" class="shortcut-list" aria-label="Popup keyboard shortcuts" aria-describedby="shortcut-help-note">
+        <li data-shortcut="g" data-shortcut-control="enabled"><kbd>G</kbd><span>Toggle global blocking</span></li>
+        <li data-site-shortcut data-shortcut="s" data-shortcut-control="site-enabled"><kbd>S</kbd><span>Toggle protection on this site</span></li>
+        <li data-site-shortcut data-shortcut="p" data-shortcut-control="pause-site"><kbd>P</kbd><span>Pause or resume this site for the session</span></li>
+        <li data-site-shortcut data-shortcut="c" data-shortcut-control="cookie-site-enabled"><kbd>C</kbd><span>Toggle cookie protection on this site</span></li>
+        <li data-site-shortcut data-shortcut="b" data-shortcut-control="cookie-banner-site-enabled"><kbd>B</kbd><span>Toggle cookie-banner rejection on this site</span></li>
+        <li data-site-shortcut data-shortcut="e" data-shortcut-control="pick-element"><kbd>E</kbd><span>Start the element picker</span></li>
+        <li data-shortcut="o" data-shortcut-control="settings"><kbd>O</kbd><span>Open Settings</span></li>
+      </ul>
+    </details>
+
+    <button id="settings" type="button" aria-keyshortcuts="O" aria-describedby="global-status engine-status popup-privacy-note">Settings</button>
+  </main>
+  <script type="module" src="popup-settings-early.js"></script>
+  <script type="module" src="popup-engine-state.js"></script>
+  <script type="module" src="popup.js"></script>
+  <script type="module" src="popup-semantics.js"></script>
+  <script type="module" src="popup-busy-semantics.js"></script>
+  <script type="module" src="popup-global-semantics.js"></script>
+  <script type="module" src="popup-keyboard.js"></script>
+</body>
+</html>

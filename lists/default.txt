@@ -1,0 +1,31 @@
+# drop-ads native list v1
+#
+# Small, conservative offline baseline. The larger HaGeZi source remains the
+# default online layer, while these rules keep fresh/offline installs useful.
+
+# Common advertising and ad-script delivery hosts.
+block domain pagead2.googlesyndication.com
+block domain securepubads.g.doubleclick.net
+block domain googleads.g.doubleclick.net
+block domain adservice.google.com
+block domain c.amazon-adsystem.com
+block domain aax.amazon-adsystem.com
+block domain ads.pubmatic.com
+block domain static.criteo.net
+block domain gum.criteo.com
+block domain cdn.taboola.com
+block domain trc.taboola.com
+block domain widgets.outbrain.com
+
+# Script-specific paths used by common advertising loaders.
+block pattern ||www.googletagservices.com/tag/js/gpt.js
+block pattern ||pagead2.googlesyndication.com/pagead/js/*
+block pattern ||securepubads.g.doubleclick.net/tag/js/*
+
+# Conservative declarative cosmetic selectors. No scriptlets or page code.
+hide cosmetic ins.adsbygoogle
+hide cosmetic iframe[id^="google_ads_iframe_"]
+hide cosmetic [id^="div-gpt-ad-"]
+hide cosmetic [data-ad-slot]
+hide cosmetic [id^="taboola-"]
+hide cosmetic .OUTBRAIN

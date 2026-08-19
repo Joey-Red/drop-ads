@@ -1,0 +1,115 @@
+name: Promote approved community block
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: community-promotion-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    if: github.event.label.name == 'community-approved' && startsWith(github.event.issue.title, '[Community block]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Verify approving actor can write repository contents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PERMISSION=$(gh api "repos/$GITHUB_REPOSITORY/collaborators/$GITHUB_ACTOR/permission" --jq '.permission')
+          case "$PERMISSION" in
+            admin|maintain|write)
+              echo "approval actor permission=$PERMISSION"
+              ;;
+            *)
+              echo "Refusing promotion: $GITHUB_ACTOR has repository permission '$PERMISSION', not write/maintain/admin." >&2
+              exit 1
+              ;;
+          esac
+
+      - id: promote
+        name: Revalidate reviewed issue and prepare list change
+        env:
+          SUBMISSION_TITLE: ${{ github.event.issue.title }}
+          SUBMISSION_BODY: ${{ github.event.issue.body }}
+        run: node tools/promote-community-submission.mjs
+
+      - name: Report skipped promotion
+        if: steps.promote.outputs.changed != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          STATUS: ${{ steps.promote.outputs.status }}
+          REASON: ${{ steps.promote.outputs.reason }}
+        run: |
+          MARKER='<!-- drop-ads-community-promotion -->'
+          MESSAGE="Promotion skipped: **$STATUS**. $REASON No branch or pull request was created."
+          BODY=$(printf '%s\n\n%s' "$MARKER" "$MESSAGE")
+          COMMENT_ID=$(gh api "repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments?per_page=100" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]") | select(.body | contains("<!-- drop-ads-community-promotion -->")) | .id' \
+            | head -n 1)
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -f body="$BODY" >/dev/null
+          else
+            gh issue comment "$ISSUE_NUMBER" --body "$BODY"
+          fi
+
+      - name: Create or refresh promotion pull request
+        if: steps.promote.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CANDIDATE: ${{ steps.promote.outputs.candidate }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          BRANCH="community/issue-$ISSUE_NUMBER"
+          DOMAIN=${CANDIDATE#block domain }
+
+          git fetch origin "$DEFAULT_BRANCH"
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$DEFAULT_BRANCH")" ]; then
+            echo "Refusing promotion: default branch changed after candidate validation; apply the approval label again to revalidate current policy." >&2
+            exit 1
+          fi
+
+          git config user.name "drop-ads community bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add lists/default.txt
+          git commit -m "community: block $DOMAIN from issue #$ISSUE_NUMBER"
+
+          git fetch origin "$BRANCH:refs/remotes/origin/$BRANCH" || true
+          git push --force-with-lease origin "HEAD:refs/heads/$BRANCH"
+
+          PR_NUMBER=$(gh pr list --head "$BRANCH" --base "$DEFAULT_BRANCH" --state open --json number --jq '.[0].number // empty')
+          PR_BODY=$(printf 'Promotes the maintainer-approved normalized community candidate `%s`.\n\nCloses #%s\n\nThis PR still requires normal human review/merge. The workflow cannot auto-merge it.' "$CANDIDATE" "$ISSUE_NUMBER")
+
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --title "community: block $DOMAIN" --body "$PR_BODY"
+            PR_URL=$(gh pr view "$PR_NUMBER" --json url --jq '.url')
+          else
+            PR_URL=$(gh pr create --base "$DEFAULT_BRANCH" --head "$BRANCH" --title "community: block $DOMAIN" --body "$PR_BODY")
+          fi
+
+          MARKER='<!-- drop-ads-community-promotion -->'
+          MESSAGE="Promotion PR prepared for \`$CANDIDATE\`: $PR_URL. It still requires human review and merge."
+          BODY=$(printf '%s\n\n%s' "$MARKER" "$MESSAGE")
+          COMMENT_ID=$(gh api "repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments?per_page=100" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]") | select(.body | contains("<!-- drop-ads-community-promotion -->")) | .id' \
+            | head -n 1)
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -f body="$BODY" >/dev/null
+          else
+            gh issue comment "$ISSUE_NUMBER" --body "$BODY"
+          fi

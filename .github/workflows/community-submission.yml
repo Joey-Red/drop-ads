@@ -1,0 +1,62 @@
+name: Validate community block submission
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate:
+    if: startsWith(github.event.issue.title, '[Community block]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: validate
+        name: Validate reviewed candidate
+        env:
+          SUBMISSION_TITLE: ${{ github.event.issue.title }}
+          SUBMISSION_BODY: ${{ github.event.issue.body }}
+        run: node tools/check-community-submission.mjs
+      - name: Report validation result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          STATUS: ${{ steps.validate.outputs.status }}
+          CANDIDATE: ${{ steps.validate.outputs.candidate }}
+          REASON: ${{ steps.validate.outputs.reason }}
+        run: |
+          MARKER='<!-- drop-ads-community-validation -->'
+          case "$STATUS" in
+            invalid)
+              MESSAGE="Automated validation: **rejected**. $REASON Nothing was added to the production list."
+              ;;
+            duplicate)
+              MESSAGE="Automated validation: **duplicate** — \`$CANDIDATE\`. The candidate is already present. Nothing was changed."
+              ;;
+            covered)
+              MESSAGE="Automated validation: **redundant** — \`$CANDIDATE\`. $REASON Nothing was changed."
+              ;;
+            conflict)
+              MESSAGE="Automated validation: **allowlist conflict** — \`$CANDIDATE\`. $REASON Human review is required and nothing was changed."
+              ;;
+            ready)
+              MESSAGE="Automated validation: **passed** — \`$CANDIDATE\`. Review attestations and a human rationale are present; maintainer review is still required and this workflow never promotes automatically."
+              ;;
+            *)
+              MESSAGE="Automated validation: **rejected**. Validator returned an unknown status. Nothing was added to the production list."
+              ;;
+          esac
+
+          BODY=$(printf '%s\n\n%s' "$MARKER" "$MESSAGE")
+          COMMENT_ID=$(gh api "repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments?per_page=100" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]") | select(.body | contains("<!-- drop-ads-community-validation -->")) | .id' \
+            | head -n 1)
+
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" -f body="$BODY" >/dev/null
+          else
+            gh issue comment "$ISSUE_NUMBER" --body "$BODY"
+          fi

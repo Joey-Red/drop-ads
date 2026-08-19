@@ -1,0 +1,25 @@
+.list-filter { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; margin: 14px 0 8px; max-width: 680px; align-items: end; }
+.list-filter label { grid-column: 1 / -1; font-size: 15px; }
+.list-filter input[type="search"] { grid-column: 1; width: 100%; min-height: 44px; box-sizing: border-box; border: 1px solid color-mix(in srgb, CanvasText 35%, transparent); border-radius: 7px; padding: 10px 12px; background: Canvas; color: CanvasText; font: inherit; }
+.list-filter .list-filter-clear { grid-column: 2; min-width: 88px; min-height: 44px; }
+.list-filter-status { grid-column: 1 / -1; margin: 0; }
+.list-filter input[type="search"]:focus-visible, .list-filter .list-filter-clear:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.list-filter-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin: 10px 0 2px; }
+.list-filter-global-status { margin: 0; }
+.list-filter-nav-badge { display: inline-block; border: 1px solid currentColor; border-radius: 999px; padding: 1px 6px; font-size: 12px; font-weight: 700; line-height: 1.4; }
+@media (max-width: 520px) {
+  .list-filter { grid-template-columns: minmax(0, 1fr); max-width: none; }
+  .list-filter label, .list-filter input[type="search"], .list-filter .list-filter-clear, .list-filter-status { grid-column: 1; }
+  .list-filter .list-filter-clear { width: 100%; }
+  .list-filter-toolbar { align-items: stretch; flex-direction: column; }
+  .list-filter-clear-all { width: 100%; }
+}
+@media (prefers-contrast: more) {
+  .list-filter input[type="search"], .list-filter .list-filter-clear, .list-filter-nav-badge { border-color: currentColor; }
+  .list-filter-status, .list-filter-global-status { opacity: 1; }
+}
+@media (forced-colors: active) {
+  .list-filter input[type="search"], .list-filter .list-filter-clear, .list-filter-nav-badge { border-color: CanvasText; }
+  .list-filter input[type="search"]:focus-visible, .list-filter .list-filter-clear:focus-visible { outline-color: Highlight; }
+  .list-filter-status, .list-filter-global-status { opacity: 1; }
+}

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>drop-ads settings</title>
+  <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="list-filter.css">
+</head>
+<body>
+  <main id="settings-main" aria-labelledby="settings-title">
+    <h1 id="settings-title">drop-ads</h1>
+    <p class="lede">Local-first browser blocking. No telemetry, analytics, request history, browsing-history collection, or usage statistics.</p>
+    <nav class="settings-nav" aria-label="Settings sections">
+      <a href="#personal-block-settings">Blocklist</a>
+      <a href="#personal-allow-settings">Allowlist</a>
+      <a href="#country-settings">Country TLDs</a>
+      <a href="#cosmetic-settings">Cosmetics</a>
+      <a href="#disabled-sites-settings">Disabled sites</a>
+      <a href="#filter-lists-settings">Filter lists</a>
+      <a href="#cookie-settings">Cookies</a>
+      <a href="#backup-settings">Backup</a>
+      <a href="#community-settings">Community</a>
+    </nav>
+
+    <section id="personal-block-settings" aria-labelledby="personal-block-heading">
+      <h2 id="personal-block-heading">Personal blocklist</h2>
+      <p class="hint">Add a domain such as <code>ads.example.com</code> or an exact HTTP(S) URL. Community submission is always separate from local blocking.</p>
+      <form id="block-form" class="rule-form">
+        <label for="block-input">Block locally</label>
+        <div class="input-row">
+          <input id="block-input" type="text" inputmode="url" enterkeyhint="done" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="block-error" placeholder="ads.example.com or https://example.com/ad.js">
+          <button type="submit" aria-describedby="block-error">Add</button>
+        </div>
+        <p class="error" id="block-error" role="alert" aria-atomic="true"></p>
+      </form>
+      <ul id="block-list" class="rule-list" aria-label="Personal block rules"></ul>
+    </section>
+
+    <section id="personal-allow-settings" aria-labelledby="personal-allow-heading">
+      <h2 id="personal-allow-heading">Personal allowlist</h2>
+      <p class="hint">Your allow rules outrank personal and shared block rules, including country-code TLD blocks.</p>
+      <form id="allow-form" class="rule-form">
+        <label for="allow-input">Always allow</label>
+        <div class="input-row">
+          <input id="allow-input" type="text" inputmode="url" enterkeyhint="done" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="allow-error" placeholder="cdn.example.com or https://example.com/resource.js">
+          <button type="submit" aria-describedby="allow-error">Add</button>
+        </div>
+        <p class="error" id="allow-error" role="alert" aria-atomic="true"></p>
+      </form>
+      <ul id="allow-list" class="rule-list" aria-label="Personal allow rules"></ul>
+    </section>
+
+    <section id="country-settings" aria-labelledby="country-heading">
+      <h2 id="country-heading">Country / region TLD blocking</h2>
+      <p class="hint">Block navigation or all requests to selected country-code TLDs. This is suffix policy, not GeoIP: a TLD does not prove where a server or company is physically located. Personal allows, site disable, and session pause still outrank/recover from these blocks.</p>
+      <form id="country-form" class="subscription-form">
+        <label for="country-preset">Country or territory</label>
+        <div class="subscription-row">
+          <select id="country-preset" aria-label="Country or territory" aria-describedby="country-status"><option value="">Choose country…</option></select>
+          <input id="country-custom-tld" type="text" inputmode="url" enterkeyhint="done" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Custom country-code TLD" aria-describedby="country-status" placeholder="Custom: .ru or рф">
+          <select id="country-mode" aria-label="Country blocking mode" aria-describedby="country-status">
+            <option value="navigation">Navigation only</option>
+            <option value="all">All resources</option>
+          </select>
+          <button id="country-submit" type="submit" aria-describedby="country-status">Block TLD</button>
+        </div>
+        <p id="country-status" class="hint" role="status" aria-live="polite" aria-atomic="true"></p>
+      </form>
+      <ul id="country-list" class="rule-list" aria-label="Blocked country or region TLD rules"></ul>
+    </section>
+
+    <section id="cosmetic-settings" aria-labelledby="cosmetic-heading">
+      <h2 id="cosmetic-heading">Cosmetic filtering</h2>
+      <p class="hint">Hide page elements with local CSS selectors. Leave Site blank for a global personal rule, or scope it to one domain. These rules stay local and do not record which page elements you viewed.</p>
+      <form id="cosmetic-hide-form" class="rule-form">
+        <label for="cosmetic-hide-selector">Hide an element</label>
+        <div class="cosmetic-input-row">
+          <input id="cosmetic-hide-domain" type="text" inputmode="url" enterkeyhint="next" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Site scope for cosmetic hide rule" aria-describedby="cosmetic-hide-error" placeholder="example.com (optional)">
+          <input id="cosmetic-hide-selector" type="text" inputmode="text" enterkeyhint="done" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="CSS selector to hide" aria-describedby="cosmetic-hide-error" placeholder=".sponsor-card">
+          <button type="submit" aria-describedby="cosmetic-hide-error">Add hide</button>
+        </div>
+        <p class="error" id="cosmetic-hide-error" role="alert" aria-atomic="true"></p>
+      </form>
+      <ul id="cosmetic-hide-list" class="rule-list" aria-label="Personal cosmetic hide rules"></ul>
+
+      <form id="cosmetic-allow-form" class="rule-form cosmetic-exception-form">
+        <label for="cosmetic-allow-selector">Exception to cosmetic hiding</label>
+        <div class="cosmetic-input-row">
+          <input id="cosmetic-allow-domain" type="text" inputmode="url" enterkeyhint="next" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Site scope for cosmetic exception" aria-describedby="cosmetic-allow-error" placeholder="example.com (optional)">
+          <input id="cosmetic-allow-selector" type="text" inputmode="text" enterkeyhint="done" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="CSS selector to keep visible" aria-describedby="cosmetic-allow-error" placeholder=".needed-content">
+          <button type="submit" aria-describedby="cosmetic-allow-error">Add exception</button>
+        </div>
+        <p class="error" id="cosmetic-allow-error" role="alert" aria-atomic="true"></p>
+      </form>
+      <ul id="cosmetic-allow-list" class="rule-list" aria-label="Personal cosmetic allow rules"></ul>
+    </section>
+
+    <section id="disabled-sites-settings" aria-labelledby="disabled-sites-heading">
+      <h2 id="disabled-sites-heading">Disabled sites</h2>
+      <p class="hint">Sites disabled from the toolbar appear here. Re-enable filtering at any time.</p>
+      <ul id="disabled-sites" class="rule-list" aria-label="Sites with persistent protection disabled"></ul>
+    </section>
+
+    <section id="filter-lists-settings" aria-labelledby="filter-lists-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="filter-lists-heading">Filter lists</h2>
+          <p class="hint">Drop Ads ships a packaged community baseline and can update it from GitHub when reachable. Adblock-style lists may contribute validated network rules and basic declarative cosmetic selectors. Add other HTTPS network-filter or hosts lists directly; no Drop Ads server is involved.</p>
+        </div>
+        <button id="refresh-lists" type="button" aria-describedby="refresh-status">Refresh now</button>
+      </div>
+      <p id="refresh-status" class="hint" role="status" aria-live="polite" aria-atomic="true"></p>
+      <form id="subscription-form" class="subscription-form">
+        <label for="subscription-url">Add external list</label>
+        <div class="subscription-row">
+          <input id="subscription-url" type="url" inputmode="url" enterkeyhint="done" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="subscription-error" placeholder="https://example.com/filter.txt">
+          <select id="subscription-format" aria-label="Filter list format" aria-describedby="subscription-error">
+            <option value="third-party">Adblock-style network/cosmetic list</option>
+            <option value="hosts">Hosts list</option>
+            <option value="drop-ads-v1">Drop Ads native list</option>
+          </select>
+          <button type="submit" aria-describedby="subscription-error">Add</button>
+        </div>
+        <p class="error" id="subscription-error" role="alert" aria-atomic="true"></p>
+      </form>
+      <p class="hint">Enable, disable, add, and remove operations are activated transactionally. If a new policy cannot be accepted, the previous configured/active policy remains in place.</p>
+      <ul id="subscription-list" class="rule-list subscription-list" aria-label="Configured filter lists"></ul>
+    </section>
+
+    <section id="cookie-settings" aria-labelledby="cookie-heading">
+      <h2 id="cookie-heading">Cookie protection</h2>
+      <label for="cookie-mode">Cookie mode</label>
+      <select id="cookie-mode" aria-describedby="cookie-exception-error">
+        <option value="off">Off</option>
+        <option value="third-party">Block third-party cookies</option>
+        <option value="all">Block all cookies (hard mode)</option>
+      </select>
+      <p class="hint">Third-party protection is the default. Hard mode removes cookie headers on all HTTP(S) resource types and will break sites that require logins or sessions.</p>
+      <form id="cookie-exception-form" class="rule-form">
+        <label for="cookie-exception-input">Allow cookies on a site</label>
+        <div class="input-row">
+          <input id="cookie-exception-input" type="text" inputmode="url" enterkeyhint="done" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="cookie-exception-error" placeholder="accounts.example.com">
+          <button type="submit" aria-describedby="cookie-exception-error">Add</button>
+        </div>
+        <p class="error" id="cookie-exception-error" role="alert" aria-atomic="true"></p>
+      </form>
+      <ul id="cookie-exception-list" class="rule-list" aria-label="Cookie protection exceptions"></ul>
+    </section>
+
+    <section id="backup-settings" aria-labelledby="backup-heading">
+      <h2 id="backup-heading">Backup and restore</h2>
+      <p class="hint">Export a local JSON backup of your configured network/cosmetic rules, country TLD rules, persistent exceptions, cookie preferences, and filter subscriptions. Backups exclude filter cache, temporary session pauses, request/browsing data, page contents, statistics, identifiers, and timestamps.</p>
+      <div class="backup-row" role="group" aria-label="Backup actions" aria-describedby="backup-status backup-error">
+        <button id="export-settings" type="button" aria-describedby="backup-status backup-error">Export settings</button>
+        <label for="import-settings-file">Backup file</label>
+        <input id="import-settings-file" type="file" accept=".json,application/json" aria-describedby="backup-status backup-error">
+        <button id="import-settings" type="button" aria-describedby="backup-status backup-error">Import selected file</button>
+      </div>
+      <p class="hint">Importing is an explicit local action. Enabled external filter-list URLs in the backup may be contacted afterward by the normal list refresh path.</p>
+      <p id="backup-status" class="hint" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p id="backup-error" class="error" role="alert" aria-atomic="true"></p>
+    </section>
+
+    <section id="community-settings" aria-labelledby="community-heading">
+      <h2 id="community-heading">Community contribution</h2>
+      <label class="check-row">
+        <input id="auto-submit" type="checkbox" aria-describedby="community-help">
+        <span>Automatically prepare a GitHub community submission after I add a new local block</span>
+      </label>
+      <p id="community-help" class="hint">Off by default. When enabled, Drop Ads opens a prefilled GitHub issue for review; it never embeds a GitHub token or silently posts on your behalf. Exact URLs are reduced to their domain before leaving the browser. Country TLD policy and cosmetic selectors are not valid community submissions.</p>
+    </section>
+  </main>
+  <script type="module" src="recovery-bootstrap.js"></script>
+  <script type="module" src="ui-semantics.js"></script>
+  <script type="module" src="dynamic-list-semantics.js"></script>
+  <script type="module" src="community-ui.js"></script>
+  <script type="module" src="form-state-semantics.js"></script>
+  <script type="module" src="list-filter.js"></script>
+  <script type="module" src="list-filter-landmarks.js"></script>
+  <script type="module" src="options.js"></script>
+  <script type="module" src="country.js"></script>
+  <script type="module" src="cosmetics.js"></script>
+</body>
+</html>

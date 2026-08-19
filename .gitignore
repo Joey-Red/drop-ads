@@ -1,0 +1,8 @@
+dist/
+artifacts/qualification-record.json
+artifacts/qualification-observation.json
+artifacts/.qualification-observation.lock/
+*.zip
+*.xpi
+.DS_Store
+Thumbs.db
